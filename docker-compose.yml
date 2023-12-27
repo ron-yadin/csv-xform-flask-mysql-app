@@ -1,0 +1,8 @@
+version: '3'
+services:
+  webapp:
+    build: ./webapp
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./data:/app/data  # This maps the local 'data' directory to '/app/data' inside the container

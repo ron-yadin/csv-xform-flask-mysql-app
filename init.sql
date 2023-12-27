@@ -1,7 +1,8 @@
---init.sql
+-- init.sql
 
 CREATE TABLE IF NOT EXISTS submissions (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    submission_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     submitter VARCHAR(255) NOT NULL,
     submission_name VARCHAR(255) NOT NULL
 );
@@ -9,17 +10,15 @@ CREATE TABLE IF NOT EXISTS submissions (
 CREATE TABLE IF NOT EXISTS inputs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     submission_id INT,
-    x DEC,
-    y DEC,
+    x DECIMAL (10,2),
+    y DECIMAL (10,2),
     FOREIGN KEY (submission_id) REFERENCES submissions(id)
 );
 
 CREATE TABLE IF NOT EXISTS outputs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     input_id INT,
-    -- x DEC,
-    -- y DEC,
-    sum DEC,
+    `sum` DECIMAL (10,2),
     FOREIGN KEY (input_id) REFERENCES inputs(id)
 );
 

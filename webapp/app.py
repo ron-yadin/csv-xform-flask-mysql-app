@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, send_from_directory
+import mysql.connector
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from io import BytesIO
@@ -27,6 +28,7 @@ def home():
     """
     if request.method == "POST":
         # get file object from html form
+        submitter = request.form.get("submitter")
         file = request.files["file"]
         if file:
             # get filename, separate name & extension
@@ -52,9 +54,23 @@ def home():
             # process csv file object, return both input and output dfs
             input_valid, input_df, output_df = csv_transform.process_csv(file)
 
+            # handle cases of invalid input, direct user to the error message page
             if input_valid == False:
                 # in this case, error_message_str stored in input_df variable
                 return render_template("error.html", message=input_df)
+            
+            # add submission to MySQL database
+            mydb = mysql.connector.connect(
+                host="mysql",
+                user="web_user",
+                password="web_password",
+                database="web_database"
+            )
+            mycursor = mydb.cursor()
+            sql = "INSERT INTO submissions (submitter, submission_name) VALUES (%s, %s)"
+            val = (submitter, filename_no_ext)
+            mycursor.execute(sql, val)
+            mydb.commit()
 
             # create BytesIO object to store the zip file in memory
             zip_buffer = BytesIO()

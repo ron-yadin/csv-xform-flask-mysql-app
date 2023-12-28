@@ -1,13 +1,14 @@
 version: '3'
 services:
   webapp:
-    build: 
+    build:
+      # building from proj folder context to enable access to .env file
       context: ./
       dockerfile: ./webapp/Dockerfile
     ports:
       - "5001:5000"
     volumes:
-      - ./data:/app/data  # This maps the local 'data' directory to '/app/data' inside the container
+      - ./data:/app/data # This maps the local 'data' directory to '/app/data' inside the container
 
   mysql:
     image: mysql:latest

@@ -6,3 +6,27 @@ services:
       - "5001:5000"
     volumes:
       - ./data:/app/data  # This maps the local 'data' directory to '/app/data' inside the container
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: web_database
+      MYSQL_USER: web_user
+      MYSQL_PASSWORD: web_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/combined_init.sql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+
+volumes:
+  mysql_data:

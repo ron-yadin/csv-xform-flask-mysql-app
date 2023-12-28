@@ -1,7 +1,9 @@
 version: '3'
 services:
   webapp:
-    build: ./webapp
+    build: 
+      context: ./
+      dockerfile: ./webapp/Dockerfile
     ports:
       - "5001:5000"
     volumes:
@@ -9,11 +11,9 @@ services:
 
   mysql:
     image: mysql:latest
+    env_file:
+      - .env
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: web_database
-      MYSQL_USER: web_user
-      MYSQL_PASSWORD: web_password
       TZ: America/Los_Angeles
     ports:
       - "3306:3306"

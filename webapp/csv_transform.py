@@ -52,11 +52,17 @@ def process_csv(file_object_in):
         # error message in place of input_df, and output_df as None
         return False, error_message_str, None
 
+    # convert all values in input_df to float
+    input_df = input_df.astype(float)
+
     # copy input_df to output_df for processing
     output_df = input_df.copy()
 
     # transformation logic to get from input to output
     output_df["sum"] = output_df["x"] + output_df["y"]
+
+    # convert all values in output_df to float
+    output_df = output_df.astype(float)
 
     # return input_valid as True if assumptions met, input_df, and output_df
     return True, input_df, output_df

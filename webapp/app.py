@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, send_from_directory
 import mysql.connector
+import pandas as pd
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from io import BytesIO
@@ -59,7 +60,7 @@ def home():
                 # in this case, error_message_str stored in input_df variable
                 return render_template("error.html", message=input_df)
             
-            # add submission to MySQL database
+            # connect to MySQL database
             mydb = mysql.connector.connect(
                 host="mysql",
                 user="web_user",
@@ -67,10 +68,36 @@ def home():
                 database="web_database"
             )
             mycursor = mydb.cursor()
+
+            # add record to submission table
             sql = "INSERT INTO submissions (submitter, submission_name) VALUES (%s, %s)"
             val = (submitter, filename_no_ext)
             mycursor.execute(sql, val)
             mydb.commit()
+
+            # add records to inputs table
+            submission_id = mycursor.lastrowid
+            inputs_vals = []
+
+            for index, row in input_df.iterrows():
+                inputs_vals.append((submission_id, row['x'], row['y']))
+
+            inputs_sql = "INSERT INTO inputs (submission_id, x, y) VALUES (%s, %s, %s)"
+            mycursor.executemany(inputs_sql, inputs_vals)
+            mydb.commit()
+
+            # add records to outputs table
+            mycursor.execute(f"SELECT * FROM inputs WHERE submission_id = {submission_id}")
+            inputs_rows = mycursor.fetchall()
+            inputs_rows_df = pd.DataFrame(inputs_rows, columns =['input_id', 'submission_id', 'x', 'y'])
+            outputs_vals = list(zip(inputs_rows_df["input_id"].astype(float).values, output_df["sum"].astype(float).values))
+            print("~~~~~~~~~~~", flush=True)
+            print(outputs_vals, flush=True)
+            
+            outputs_sql = "INSERT INTO outputs (input_id, sum) VALUES (%s, %s)"
+            mycursor.executemany(outputs_sql, outputs_vals)
+            mydb.commit()
+
 
             # create BytesIO object to store the zip file in memory
             zip_buffer = BytesIO()

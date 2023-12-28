@@ -14,6 +14,7 @@ services:
       MYSQL_DATABASE: web_database
       MYSQL_USER: web_user
       MYSQL_PASSWORD: web_password
+      TZ: America/Los_Angeles
     ports:
       - "3306:3306"
     volumes:

@@ -1,5 +1,6 @@
-import pandas as pd
 from io import StringIO
+
+import pandas as pd
 
 
 def process_csv(file_object_in):

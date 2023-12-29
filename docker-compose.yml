@@ -1,19 +1,20 @@
 version: '3'
 services:
   webapp:
-    build: ./webapp
+    build:
+      # building from proj folder context to enable access to .env file
+      context: ./
+      dockerfile: ./webapp/Dockerfile
     ports:
       - "5001:5000"
     volumes:
-      - ./data:/app/data  # This maps the local 'data' directory to '/app/data' inside the container
+      - ./data:/app/data # This maps the local 'data' directory to '/app/data' inside the container
 
   mysql:
     image: mysql:latest
+    env_file:
+      - .env
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: web_database
-      MYSQL_USER: web_user
-      MYSQL_PASSWORD: web_password
       TZ: America/Los_Angeles
     ports:
       - "3306:3306"

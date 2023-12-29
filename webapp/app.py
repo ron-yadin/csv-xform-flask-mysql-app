@@ -1,12 +1,22 @@
-from flask import Flask, render_template, request, send_from_directory
+import os
+import zipfile
+from datetime import datetime
+from io import BytesIO
+from zoneinfo import ZoneInfo
+
 import mysql.connector
 import pandas as pd
-from datetime import datetime
-from zoneinfo import ZoneInfo
-from io import BytesIO
-import zipfile
+from dotenv import load_dotenv
+from flask import Flask, render_template, request, send_from_directory
 
 import csv_transform  # custom csv_transform module
+
+# load mysql db secrets from .env
+load_dotenv()
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
+
 
 app = Flask(__name__)
 
@@ -59,13 +69,13 @@ def home():
             if input_valid == False:
                 # in this case, error_message_str stored in input_df variable
                 return render_template("error.html", message=input_df)
-            
+
             # connect to MySQL database
             mydb = mysql.connector.connect(
                 host="mysql",
-                user="web_user",
-                password="web_password",
-                database="web_database"
+                user=MYSQL_USER,
+                password=MYSQL_PASSWORD,
+                database=MYSQL_DATABASE,
             )
             mycursor = mydb.cursor()
 
@@ -80,24 +90,29 @@ def home():
             inputs_vals = []
 
             for index, row in input_df.iterrows():
-                inputs_vals.append((submission_id, row['x'], row['y']))
+                inputs_vals.append((submission_id, row["x"], row["y"]))
 
             inputs_sql = "INSERT INTO inputs (submission_id, x, y) VALUES (%s, %s, %s)"
             mycursor.executemany(inputs_sql, inputs_vals)
             mydb.commit()
 
             # add records to outputs table
-            mycursor.execute(f"SELECT * FROM inputs WHERE submission_id = {submission_id}")
+            mycursor.execute(
+                f"SELECT * FROM inputs WHERE submission_id = {submission_id}"
+            )
             inputs_rows = mycursor.fetchall()
-            inputs_rows_df = pd.DataFrame(inputs_rows, columns =['input_id', 'submission_id', 'x', 'y'])
-            outputs_vals = list(zip(inputs_rows_df["input_id"].astype(float).values, output_df["sum"].astype(float).values))
-            print("~~~~~~~~~~~", flush=True)
-            print(outputs_vals, flush=True)
-            
+            inputs_rows_df = pd.DataFrame(
+                inputs_rows, columns=["input_id", "submission_id", "x", "y"]
+            )
+            outputs_vals = list(
+                zip(
+                    inputs_rows_df["input_id"].astype(float).values,
+                    output_df["sum"].astype(float).values,
+                )
+            )
             outputs_sql = "INSERT INTO outputs (input_id, sum) VALUES (%s, %s)"
             mycursor.executemany(outputs_sql, outputs_vals)
             mydb.commit()
-
 
             # create BytesIO object to store the zip file in memory
             zip_buffer = BytesIO()

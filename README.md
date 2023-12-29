@@ -54,6 +54,12 @@ ___
 1. Open a web browser and visit ```localhost:8080``` for the MySQL database administration interface
     - use the user name (```MYSQL_USER```) & password (```MYSQL_PASSWORD```) configured in the ```.env``` file to sign into the MySQL admin dashboard
     - To inspect & query tables, click the database name (```MYSQL_DATABASE```) in the left panel. Tables will be shown and "SQL" option in the top navigation bar will open a box to enter queries
+        - example SQL query to run: 
+        ```
+        SELECT * FROM submissions s 
+        LEFT JOIN inputs i on s.id = i.submission_id 
+        LEFT JOIN outputs o on i.id = o.input_id
+        ```
 1. To stop the app - if the ```-d``` flag was omitted, then press ```Ctrl+C```. If running in "detached mode", run ```docker-compose down```. 
     - Note: the data in the MySQL database persists between container restarts in a local docker volume
     - Running ```docker-compose down -v``` will remove the volume causing the data to be lost - avoid this or utilize it depending on the desire to either persist or delete the MySQL db data between container restarts

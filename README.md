@@ -38,7 +38,7 @@ ___
 1. Ensure Docker is installed - follow [the install instructions found here](https://docs.docker.com/desktop/) to install it
     - Docker Desktop recommended for MacOS & Windows. Docker Enginge and Docker Compose installed on 64-bit linux should also work (but as of yet, not tested). 
 1. Clone or download this repo to copy the required files & file structure locally
-    - Open a terminal window and run: ```git clone --depth 1 https://github.com/ron-yadin/sv-xform-flask-mysql-example.git```
+    - Open a terminal window and run: ```git clone --depth 1 https://github.com/ron-yadin/csv-xform-flask-mysql-app.git```
     - Alternatively, click green ```Code``` button >  ```Download ZIP```, then unzip the file locally
 1. Convert the ```env.txt``` file into a configured ```.env``` file locally
     - add secrets (user name, passwords, database name) to the ```env.txt``` template file & rename to ```.env```

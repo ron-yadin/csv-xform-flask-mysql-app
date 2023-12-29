@@ -46,7 +46,7 @@ ___
 ## To Run Locally
 1. Ensure Docker daemon is running locally (by starting Docker Desktop, for example)
 1. Open a terminal window
-1. Navigate to the project folder ```cd local/path/to/csv-xform-flask-mysql-example```    
+1. Navigate to the project folder ```cd local/path/to/csv-xform-flask-mysql-app```    
     - update the path to match project folder location in local file system 
 1. Run the command: ```docker-compose up --build```
     - optionally, add the ```-d``` flag to run in "detached mode" (in the background)

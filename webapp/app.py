@@ -28,14 +28,16 @@ def home():
 
     Supports both GET and POST requests. For GET requests, renders the home page.
     For POST requests, processes the uploaded CSV file, creates a zip file containing
-    input and output CSVs, and renders the home page with relevant information.
+    input and output CSVs,  adds submission details to a MySQL database, and renders
+    the home page with relevant information.
 
     Returns:
     - GET request: Rendered HTML template for the home page.
     - POST request:
         - Rendered HTML template with error message if file extension is not .csv or
           if the CSV processing encounters an error.
-        - Rendered HTML template with processed input and output DataFrames if successful.
+        - Rendered HTML template with processed input and output DataFrames if successful,
+          along with details stored in a MySQL database.
     """
     if request.method == "POST":
         # get file object from html form

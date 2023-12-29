@@ -34,7 +34,9 @@ ___
 ```
 ___
 ## Requirements
+1. Supported architectures: ```amd64```,  ```arm64v8```
 1. Ensure Docker is installed - follow [the install instructions found here](https://docs.docker.com/desktop/) to install it
+    - Docker Desktop recommended for MacOS & Windows. Docker Enginge and Docker Compose installed on 64-bit linux should also work (but as of yet, not tested). 
 1. Clone or download this repo to copy the required files & file structure locally
     - Open a terminal window and run: ```git clone --depth 1 https://github.com/ron-yadin/sv-xform-flask-mysql-example.git```
     - Alternatively, click green ```Code``` button >  ```Download ZIP```, then unzip the file locally
@@ -50,13 +52,16 @@ ___
     - optionally, add the ```-d``` flag to run in "detached mode" (in the background)
 1. Open a web browser and visit ```localhost:5001``` for the webapp user interface
 1. Open a web browser and visit ```localhost:8080``` for the MySQL database administration interface
-    - use the user name & password configured in the ```.env``` file to sign into the MySQL admin dashboard
+    - use the user name (```MYSQL_USER```) & password (```MYSQL_PASSWORD```) configured in the ```.env``` file to sign into the MySQL admin dashboard
+    - To inspect & query tables, click the database name (```MYSQL_DATABASE```) in the left panel. Tables will be shown and "SQL" option in the top navigation bar will open a box to enter queries
 1. To stop the app - if the ```-d``` flag was omitted, then press ```Ctrl+C```. If running in "detached mode", run ```docker-compose down```. 
     - Note: the data in the MySQL database persists between container restarts in a local docker volume
     - Running ```docker-compose down -v``` will remove the volume causing the data to be lost - avoid this or utilize it depending on the desire to either persist or delete the MySQL db data between container restarts
 ## Notes
 1. the ```init.sql``` file includes the insertion of a few rows of example data upon initialization, to ensure the tables get created even in the absence of any user action. These lines can be removed if no example data is desired.
-2. Upon submitting an input file in the user interface webpage, a link appears to download the transformed results. This results file is a zip file, with the filename YYYY-MM-DD_HH:MM:SS_\<input_filename\>.zip, which contains 2 similarly named csvs - one representing the input file & the other representing the output file. This zip file should also be saved to the data directory. 
+1. Upon submitting an input file in the user interface webpage, a link appears to download the transformed results. This results file is a zip file, with the filename YYYY-MM-DD_HH:MM:SS_\<input_filename\>.zip, which contains 2 similarly named csvs - one representing the input file & the other representing the output file. This zip file should also be saved to the data directory. 
+## Troubleshooting
+1. If deployment attempted on non-supported system architecture, might see an error like: ```no matching manifest for <non-supported/system/architecture> in the manifest list entries```
 ___
 ## How To Modify
 1. Edit the ```init.sql``` file to create the tables to match the new desired data model for tracking of inputs, outputs, and submission events

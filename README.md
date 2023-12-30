@@ -100,3 +100,4 @@ ___
 1. Add appropriate example files to the ```/data``` folder
     - Replace the ```example_input_file.csv``` and ```empty_template_input_file.csv``` with relevant example and template files
     - The ```index.html``` references those file names exactly for the example and template download links. If those file names change, update the download links in the ```index.html``` file 
+1. Update the ```README.md``` file & add appropriate screenshot examples to the ```/readme_resources/``` directory

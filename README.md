@@ -14,10 +14,16 @@
 ___
 ## Project File Structure
 ```
-/csv-xform-flask-mysql-example
+/csv-xform-flask-mysql-app
 |-- data (for example files & output zip files)
 |   |-- empty_template_input_file.csv
 |   |-- example_input_file.csv
+|-- readme_resources
+|   |-- csv-xform-flask-webapp-example.png
+|   |-- csv-xform-nominal-docker-ps-example.png
+|   |-- csv-xform-phpmyadmin-home-example.png
+|   |-- csv-xform-phpmyadmin-login-example.png
+|   |-- csv-xform-phpmyadmin-query-example.png
 |-- webapp
 |   |-- templates
 |       |-- error.html
@@ -26,10 +32,11 @@ ___
 |   |-- csv_transform.py
 |   |-- Dockerfile
 |   |-- requirements.txt
-|-- env.txt (MUST BE CHANGED TO .ENV LOCALLY, REPLACE DEFAULT VALUES)
 |-- .gitignore
 |-- docker-compose.yml
+|-- env.txt (MUST BE CHANGED TO .ENV LOCALLY, REPLACE DEFAULT VALUES)
 |-- init.sql
+|-- LICENSE
 |-- README.md
 ```
 ___
@@ -52,8 +59,10 @@ ___
     - optionally, add the ```-d``` flag to run in "detached mode" (in the background)
 1. Open a web browser and visit ```localhost:5001``` for the webapp user interface
     - There will be a description, instructions, links to download an example input file & empty input file template, and a form to submit an input csv and submitter name. 
+![flask webapp screenshot](./readme_resources/csv-xform-flask-webapp-example.png)
 1. Open a web browser and visit ```localhost:8080``` for the MySQL database administration interface
     - use the user name (```MYSQL_USER```) & password (```MYSQL_PASSWORD```) configured in the ```.env``` file to sign into the MySQL admin dashboard
+![phpmyadmin login screenshot](./readme_resources/csv-xform-phpmyadmin-login-example.png)
     - To inspect & query tables, click the database name (```MYSQL_DATABASE```) in the left panel. Tables will be shown and "SQL" option in the top navigation bar will open a box to enter queries
         - example SQL query to run: 
         ```
@@ -61,6 +70,8 @@ ___
         LEFT JOIN inputs i on s.id = i.submission_id 
         LEFT JOIN outputs o on i.id = o.input_id
         ```
+![phpmyadmin home screenshot](./readme_resources/csv-xform-phpmyadmin-home-example.png)
+![phpmyadmin query screenshot](./readme_resources/csv-xform-phpmyadmin-query-example.png)
 1. To stop the app - if the ```-d``` flag was omitted, then press ```Ctrl+C```. If running in "detached mode", run ```docker-compose down```. 
     - Note: the data in the MySQL database persists between container restarts in a local docker volume
     - Running ```docker-compose down -v``` will remove the volume causing the data to be lost - avoid this or utilize it depending on the desire to either persist or delete the MySQL db data between container restarts
@@ -69,6 +80,11 @@ ___
 1. Upon submitting an input file in the user interface webpage, a link appears to download the transformed results. This results file is a zip file, with the filename YYYY-MM-DD_HH:MM:SS_\<input_filename\>.zip, which contains 2 similarly named csvs - one representing the input file & the other representing the output file. This zip file should also be saved to the data directory. 
 ## Troubleshooting
 1. If deployment attempted on non-supported system architecture, might see an error like: ```no matching manifest for <non-supported/system/architecture> in the manifest list entries```
+1. If issues arise in connecting to or executing actions with either user webapp or MySQL admin webapp, examine the container status & docker logs
+    - In a terminal window, run ```docker ps```. There should be 3 containers running
+![nominal docker ps screenshot](./readme_resources/csv-xform-nominal-docker-ps-example.png)
+    - If running in detached mode, run ```docker logs <container id>``` for each container - examine if any ```exited with error code #```. This would indicate an issue, and provide information for further troubleshooting.
+    - If running in streaming mode (not detached), simply examine the logs in the terminal window 
 ___
 ## How To Modify
 1. Edit the ```init.sql``` file to create the tables to match the new desired data model for tracking of inputs, outputs, and submission events

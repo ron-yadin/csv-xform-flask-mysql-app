@@ -26,7 +26,7 @@ ___
 |   |-- csv_transform.py
 |   |-- Dockerfile
 |   |-- requirements.txt
-|-- env.txt (MUST BE COMPLETED & CHANGED TO .ENV LOCALLY)
+|-- env.txt (MUST BE CHANGED TO .ENV LOCALLY, REPLACE DEFAULT VALUES)
 |-- .gitignore
 |-- docker-compose.yml
 |-- init.sql
@@ -41,7 +41,7 @@ ___
     - Open a terminal window and run: ```git clone --depth 1 https://github.com/ron-yadin/csv-xform-flask-mysql-app.git```
     - Alternatively, click green ```Code``` button >  ```Download ZIP```, then unzip the file locally
 1. Convert the ```env.txt``` file into a configured ```.env``` file locally
-    - add secrets (user name, passwords, database name) to the ```env.txt``` template file & rename to ```.env```
+    - rename the ```env.txt``` template file as  ```.env```, and replace the default user name, passwords, database name with custom secret values
     - this is a security best practice to avoid publication of sensitive login information - the ```.env``` is in the ```.gitignore``` file, and will not be included in version control
 ## To Run Locally
 1. Ensure Docker daemon is running locally (by starting Docker Desktop, for example)
@@ -51,6 +51,7 @@ ___
 1. Run the command: ```docker-compose up --build```
     - optionally, add the ```-d``` flag to run in "detached mode" (in the background)
 1. Open a web browser and visit ```localhost:5001``` for the webapp user interface
+    - There will be a description, instructions, links to download an example input file & empty input file template, and a form to submit an input csv and submitter name. 
 1. Open a web browser and visit ```localhost:8080``` for the MySQL database administration interface
     - use the user name (```MYSQL_USER```) & password (```MYSQL_PASSWORD```) configured in the ```.env``` file to sign into the MySQL admin dashboard
     - To inspect & query tables, click the database name (```MYSQL_DATABASE```) in the left panel. Tables will be shown and "SQL" option in the top navigation bar will open a box to enter queries

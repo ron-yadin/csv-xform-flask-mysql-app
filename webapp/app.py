@@ -17,7 +17,6 @@ MYSQL_USER = os.getenv("MYSQL_USER")
 MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
 MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
 
-
 app = Flask(__name__)
 
 
@@ -39,6 +38,20 @@ def home():
         - Rendered HTML template with processed input and output DataFrames if successful,
           along with details stored in a MySQL database.
     """
+
+    # check that .env file has been configured correctly
+    try:
+        for env_var in [MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE]:
+            assert env_var != None
+            assert env_var != ""
+            assert type(env_var) == str
+    except:
+        error_message_str = f"""Error in .env file configuration!
+        Environtment variables MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE must be set
+        as valid values in .env file in project directory."""
+        return render_template("error.html", message=error_message_str)
+
+    # run this block upon "POST" request from CSV upload
     if request.method == "POST":
         # get file object from html form
         submitter = request.form.get("submitter")
